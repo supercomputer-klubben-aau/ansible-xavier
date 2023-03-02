@@ -44,3 +44,10 @@
         chdir: "{{ program_dir }}/{{ openblas_name }}"
         creates: "{{ program_dir }}/{{ openblas_name }}/libopenblas.a"
       
+
+    - name: Download hpl
+      ansible.builtin.unarchive:
+        src: "https://netlib.org/benchmark/hpl/{{ hpl_name }}.tar.gz"
+        dest: "{{ program_dir }}"
+        remote_src: true
+        creates: "{{ program_dir }}/{{ hpl_name }}/README"
