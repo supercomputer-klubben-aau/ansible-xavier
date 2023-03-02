@@ -4,6 +4,9 @@ program_dir: "/opt/bench"
 openblas_version: "0.3.21"
 openblas_name: "OpenBLAS-{{ openblas_version }}"
 
+hpl_version: "2.3"
+hpl_name: "hpl-{{ hpl_version }}"
+
 ram_in_gb: "{{ ( ansible_memtotal_mb / 1024 * 0.75 ) | int | abs }}"
 
 nodecount: "{{ ansible_play_hosts | length | int }}"
