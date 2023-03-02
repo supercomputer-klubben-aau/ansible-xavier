@@ -54,7 +54,7 @@
 
     - name: Copy our makefile to hpl
       ansible.builtin.template:
-        src: templates/Make.OpenBLAS.j2
+        src: templates/hpl.Make.OpenBLAS.j2
         dest: "{{ program_dir }}/{{ hpl_name }}/Make.OpenBLAS"
         mode: 0644
 
@@ -72,6 +72,12 @@
         remote_src: true
         creates: "{{ program_dir }}/{{ hpcg_name }}/README.md"
 
+    - name: Copy our makefile to hpcg
+      ansible.builtin.template:
+        src: templates/hpcg.Make.Linux_MPI_OMP.j2
+        dest: "{{ program_dir }}/{{ hpcg_name }}/setup/Make.Linux_MPI_OMP"
+        mode: 0644
+
     - name: Create hpcg build dir
       ansible.builtin.file:
         path: "{{ program_dir }}/{{ hpcg_name }}/build"
@@ -84,5 +90,5 @@
         chdir: "{{ program_dir }}/{{ hpcg_name }}/build"
         creates: "{{ program_dir }}/{{ hpcg_name }}/build/bin/xhpcg"
       loop:
-        - "{{ program_dir }}/{{ hpcg_name }}/configure Linux_MPI"
+        - "{{ program_dir }}/{{ hpcg_name }}/configure Linux_MPI_OMP"
         - "make"
