@@ -63,3 +63,11 @@
       args:
         chdir: "{{ program_dir }}/{{ hpl_name }}"
         creates: "{{ program_dir }}/{{ hpl_name }}/bin/OpenBLAS/xhpl"
+
+
+    - name: Download hpcg
+      ansible.builtin.unarchive:
+        src: "https://github.com/hpcg-benchmark/hpcg/archive/refs/tags/{{ hpcg_archive_name }}.tar.gz"
+        dest: "{{ program_dir }}"
+        remote_src: true
+        creates: "{{ program_dir }}/{ hpcg_name }}/README.md"
