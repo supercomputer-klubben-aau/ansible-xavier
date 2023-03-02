@@ -1,3 +1,4 @@
+---
 - name: Install hpl benchmark
   hosts: cluster
   become: false
@@ -10,7 +11,7 @@
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 600
-        become: true
+      become: true
 
     - name: Install dependencies
       ansible.builtin.package:
@@ -41,5 +42,5 @@
       ansible.builtin.command: "make USE_THREAD=1 NUM_THREADS=8 USE_OPENMP=0 DYNAMIC_ARCH=0 COMMON_OPT='-Ofast -march=native -fno-stack-protector -z execstack -no-pie' CFLAGS='-Ofast -march=native -fno-stack-protector -z execstack -no-pie' FCOMMON_OPT='-Ofast -march=native -fno-stack-protector -z execstack -no-pie' FCFLAGS='-Ofast -march=native -fno-stack-protector -z execstack -no-pie'"
       args:
         chdir: "{{ program_dir }}/{{ openblas_name }}"
-        creates: "{{ program_dir }}/{{ openblas_name }}/lib/libopenblas.a"
+        creates: "{{ program_dir }}/{{ openblas_name }}/libopenblas.a"
       
