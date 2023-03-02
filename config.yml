@@ -7,6 +7,8 @@ openblas_name: "OpenBLAS-{{ openblas_version }}"
 hpl_version: "2.3"
 hpl_name: "hpl-{{ hpl_version }}"
 
+compile_flags: "-Ofast -march=native -fno-stack-protector -z execstack -no-pie -fomit-frame-pointer -funroll-loops"
+
 ram_in_gb: "{{ ( ansible_memtotal_mb / 1024 * 0.75 ) | int | abs }}"
 
 nodecount: "{{ ansible_play_hosts | length | int }}"

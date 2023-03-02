@@ -39,7 +39,7 @@
 
 # https://github.com/bgeneto/build-install-compile-openblas
     - name: Build OpenBlas
-      ansible.builtin.command: "make USE_THREAD=1 NUM_THREADS=8 USE_OPENMP=0 DYNAMIC_ARCH=0 COMMON_OPT='-Ofast -march=native -fno-stack-protector -z execstack -no-pie' CFLAGS='-Ofast -march=native -fno-stack-protector -z execstack -no-pie' FCOMMON_OPT='-Ofast -march=native -fno-stack-protector -z execstack -no-pie' FCFLAGS='-Ofast -march=native -fno-stack-protector -z execstack -no-pie'"
+      ansible.builtin.command: "make USE_THREAD=1 NUM_THREADS=8 USE_OPENMP=0 DYNAMIC_ARCH=0 COMMON_OPT='{{ compile_flags }}' CFLAGS='{{ compile_flags }}' FCOMMON_OPT='{{ compile_flags }}' FCFLAGS='{{ compile_flags }}'"
       args:
         chdir: "{{ program_dir }}/{{ openblas_name }}"
         creates: "{{ program_dir }}/{{ openblas_name }}/libopenblas.a"
@@ -51,3 +51,9 @@
         dest: "{{ program_dir }}"
         remote_src: true
         creates: "{{ program_dir }}/{{ hpl_name }}/README"
+
+    - name: Copy our makefile to hpl
+      ansible.builtin.template:
+        src: templates/Make.OpenBLAS.j2
+        dest: "{{ program_dir }}/{{ hpl_name }}/Make.OpenBLAS"
+        mode: 0644
