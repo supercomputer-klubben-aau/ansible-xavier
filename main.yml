@@ -70,4 +70,19 @@
         src: "https://github.com/hpcg-benchmark/hpcg/archive/refs/tags/{{ hpcg_archive_name }}.tar.gz"
         dest: "{{ program_dir }}"
         remote_src: true
-        creates: "{{ program_dir }}/{ hpcg_name }}/README.md"
+        creates: "{{ program_dir }}/{{ hpcg_name }}/README.md"
+
+    - name: Create hpcg build dir
+      ansible.builtin.file:
+        path: "{{ program_dir }}/{{ hpcg_name }}/build"
+        state: directory
+
+    # For now use the default Linux_MPI configuration
+    - name: Build hpcg
+      ansible.builtin.command: "{{ item }}"
+      args:
+        chdir: "{{ program_dir }}/{{ hpcg_name }}/build"
+        creates: "{{ program_dir }}/{{ hpcg_name }}/build/bin/xhpcg"
+      loop:
+        - "{{ program_dir }}/{{ hpcg_name }}/configure Linux_MPI"
+        - "make"
