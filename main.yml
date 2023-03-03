@@ -18,6 +18,7 @@
         name:
           - build-essential
           - openmpi-bin
+          - mpi-default-dev
         state: present
       become: true
 
@@ -43,7 +44,6 @@
       args:
         chdir: "{{ program_dir }}/{{ openblas_name }}"
         creates: "{{ program_dir }}/{{ openblas_name }}/libopenblas.a"
-      
 
     - name: Download hpl
       ansible.builtin.unarchive:
