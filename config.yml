@@ -1,6 +1,8 @@
 ---
 program_dir: "/opt/bench"
 
+cpu_governor: "performance"
+
 openblas_version: "0.3.21"
 openblas_name: "OpenBLAS-{{ openblas_version }}"
 

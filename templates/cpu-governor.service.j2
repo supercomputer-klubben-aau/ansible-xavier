@@ -1,0 +1,10 @@
+[Unit]
+Documentation=https://wiki.archlinux.org/index.php/CPU_frequency_scaling
+Description=Set CPU governor to {{ cpu_governor }}
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/cpufreq-set -g {{ cpu_governor }}
+
+[Install]
+WantedBy=default.target
