@@ -17,9 +17,24 @@
       ansible.builtin.package:
         name:
           - build-essential
-          - openmpi-bin
           - mpi-default-dev
+          - cpufrequtils
         state: present
+      become: true
+
+    - name: Create CPU governor systemd service
+      ansible.builtin.template:
+        src: templates/cpu-governor.service.j2
+        dest: /etc/systemd/system/cpu-governor.service
+        mode: 0644
+      notify: reload systemctl
+      become: true
+
+    - name: Start and enable cpu-governor service
+      ansible.builtin.service:
+        name: cpu-governor
+        state: started
+        enabled: true
       become: true
 
     - name: Create benchmark directory
@@ -40,7 +55,7 @@
 
 # https://github.com/bgeneto/build-install-compile-openblas
     - name: Build OpenBlas
-      ansible.builtin.command: "make USE_THREAD=1 NUM_THREADS=8 USE_OPENMP=0 DYNAMIC_ARCH=0 COMMON_OPT='{{ compile_flags }}' CFLAGS='{{ compile_flags }}' FCOMMON_OPT='{{ compile_flags }}' FCFLAGS='{{ compile_flags }}'"
+      ansible.builtin.command: "make USE_THREAD=1 NUM_THREADS={{ ansible_processor_vcpus }} USE_OPENMP=0 DYNAMIC_ARCH=0 COMMON_OPT='{{ compile_flags }}' CFLAGS='{{ compile_flags }}' FCOMMON_OPT='{{ compile_flags }}' FCFLAGS='{{ compile_flags }}'"
       args:
         chdir: "{{ program_dir }}/{{ openblas_name }}"
         creates: "{{ program_dir }}/{{ openblas_name }}/libopenblas.a"
