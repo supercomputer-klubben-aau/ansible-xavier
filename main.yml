@@ -78,6 +78,12 @@
       args:
         chdir: "{{ program_dir }}/{{ hpl_name }}"
         creates: "{{ program_dir }}/{{ hpl_name }}/bin/OpenBLAS/xhpl"
+    
+    - name: Copy our HPL.dat to hpl
+      ansible.builtin.template:
+        src: templates/HPL.dat.j2
+        dest: "{{ program_dir }}/{{ hpl_name }}/bin/OpenBLAS/HPL.dat"
+        mode: 0644
 
 
     - name: Download hpcg
