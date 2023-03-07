@@ -13,13 +13,70 @@
         cache_valid_time: 600
       become: true
 
+    - name: Update all packages to their latest version
+      ansible.builtin.apt:
+        upgrade: "full"
+      become: true
+
+    - name: Remove bloat
+      ansible.builtin.apt:
+        name:
+          - xserver-common
+          - x11*
+          - xcursor-themes
+          - ttf-*
+          - firefox
+          - thunderbird
+          - transmission-*
+          - ubuntu-wallpapers
+          - yaru-theme-*
+          - nautilus
+          - gnome-*
+          - libgnome-*
+          - rhythmbox
+          - whoopsie
+          - speech-dispatcher
+          - system-config-printer
+          - printer-driver-*
+          - software-properties-gtk
+          - snapd
+          - simple-scan
+          - remmina
+          - shotwell
+          - docker.io
+          - packagekit
+          - udisks2
+          - avahi-*
+          - accountsservice
+          - haveged
+          - kerneloops
+          - rpcbind
+        state: absent
+        purge: true
+        autoremove: true
+      become: true
+
     - name: Install dependencies
       ansible.builtin.package:
         name:
           - build-essential
           - mpi-default-dev
           - cpufrequtils
+          - neovim
+          - htop
         state: present
+      become: true
+
+    - name: Install jtop
+      ansible.builtin.pip:
+        name: jetson-stats
+      become: true
+
+    - name: Disable wpa_supplicant
+      ansible.builtin.service:
+        name: wpa_supplicant
+        state: stopped
+        enabled: false
       become: true
 
     - name: Create CPU governor systemd service
@@ -27,7 +84,6 @@
         src: templates/cpu-governor.service.j2
         dest: /etc/systemd/system/cpu-governor.service
         mode: 0644
-      notify: reload systemctl
       become: true
 
     - name: Start and enable cpu-governor service
@@ -35,6 +91,10 @@
         name: cpu-governor
         state: started
         enabled: true
+      become: true
+
+    - name: Set power mode to MAXN
+      ansible.builtin.command: "nvpmodel --mode 0"
       become: true
 
     - name: Create benchmark directory
